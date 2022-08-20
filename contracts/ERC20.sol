@@ -68,12 +68,15 @@ contract ERC20 is IERC20 {
 
 	uint256 private _totalSupply;
 
+	uint8 private _decimal;
+
 	string private _name;
 	string private _symbol;
 
-	constructor(string memory name_, string memory symbol_) {
+	constructor(string memory name_, string memory symbol_, uint8 decimal_) {
 		_name = name_;
 		_symbol = symbol_;
+		_decimal = decimal_;
 	}
 
 	function name() public view override returns (string memory) {
@@ -84,8 +87,8 @@ contract ERC20 is IERC20 {
 		return _symbol;
 	}
 
-	function decimal() public pure override returns (uint8) {
-		return 18;	
+	function decimal() public view override returns (uint8) {
+		return _decimal;	
 	}
 
 	function totalSupply() public view override returns (uint256) {
@@ -133,6 +136,8 @@ contract ERC20 is IERC20 {
 	function _approve(address owner, address spender, uint256 value) internal {
 		require(owner != address(0), "ERC20: approve from the zero address");
 		require(spender != address(0), "ERC20: approve to the zero address");
+
+		require(_balances[owner] >= value, "ERC20: approve amount greater than balance");
 
 		_allowances[owner][spender] = value;
 
