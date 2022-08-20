@@ -198,4 +198,14 @@ describe("MultiSigWallet", function() {
 			expect(transaction.executed).eq(true);
 		});
 	});
+
+	describe("Events", () => {
+		it('Should emit SubmitTransaction', async () => {
+			const { wallet, addr1, addr4, } = await loadFixture(deployFixture);
+
+			await expect(wallet.submitTransaction(addr4, 1, "0x"))
+				.emit(wallet, "SubmitTransaction")
+				.withArgs(addr1, 0, addr4, 1, "0x");
+		});
+	});
 });
